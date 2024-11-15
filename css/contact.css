@@ -1,9 +1,10 @@
 .logo {
-    background: #3ca918;
+    background: #3ca91800;
     position: absolute;
     width: 10vw;
     height: 5vw;
     left: 8vw;
+    top: 1.5vw;
     text-align: center;
     color: #fff;
     line-height: 4.75vw;
@@ -452,7 +453,7 @@
     width: 8vw;
     position: absolute;
     left: 12vw;
-    top: 28vw;
+    top: 30vw;
 }
 
 /* Change Autocomplete styles in Chrome*/
