@@ -2,34 +2,55 @@ let first = null;
 let second = "https://discord.gg/mu7HH6gtEJ";
 let third = "TeamSpeak Link";
 
-
 function copyText(text) {
-    if (text == "first") {
-        alert('Server is currently under development')
+    if (text === "first") {
+        const secipContent = document.getElementById('first').textContent;
+        
+        if (secipContent === "Unknown") {
+            // Redirect to a specific URL if server is under development
+            window.location.href = "https://example.com/development-info"; // Replace with your actual URL
+        } else {
+            // Copy the content if available
+            var input = document.createElement('input');
+            input.setAttribute('value', secipContent);
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            alert("Copied: " + secipContent);
+        }
     }
-    if (text == "second") {
+    if (text === "second") {
+        const secipContent = document.getElementById('second').textContent;
+        
+        if (secipContent === "Unknown") {
+            // Redirect to a specific URL if server is under development
+            window.location.href = "https://example.com/development-info"; // Replace with your actual URL
+        } else {
+            // Copy the content if available
+            var input = document.createElement('input');
+            input.setAttribute('value', secipContent);
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            alert("Copied: " + secipContent);
+        }
+    }
+    if (text === "third") {
         var input = document.createElement('input');
-        input.setAttribute('value', second);
+        input.setAttribute('value', third); // Ensure 'third' is defined with content
         document.body.appendChild(input);
         input.select();
         var result = document.execCommand('copy');
-        document.body.removeChild(input)
-        return result;
-    }
-    if (text == "third") {
-        var input = document.createElement('input');
-        input.setAttribute('value', third);
-        document.body.appendChild(input);
-        input.select();
-        var result = document.execCommand('copy');
-        document.body.removeChild(input)
+        document.body.removeChild(input);
         return result;
     }
 }
 
 function openLink(value) {
     if (value == "first") {
-        alert('Server is currently under development')
+        window.location.href = "https://google.com";
     }
     if (value == "second") {
         window.location.href = "https://discord.gg/mu7HH6gtEJ";
@@ -141,4 +162,33 @@ function selectRang(value) {
     } else {
         document.getElementsByClassName('son')[0].style.display = "none";
     }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    checkServerStatus();
+});
+
+function checkServerStatus() {
+    const serverIP = "198.244.230.175:30106";
+    const statusElement = document.getElementById("serverStatus");
+
+    fetch(`https://${serverIP}/info.json`)
+        .then(response => {
+            if (response.ok) {
+                statusElement.textContent = "Online";
+                statusElement.style.color = "green";
+            } else {
+                throw new Error("Server offline");
+            }
+        })
+        .catch(error => {
+            statusElement.textContent = "Offline";
+            statusElement.style.color = "red";
+            console.error("Error checking server status:", error);
+        });
+}
+
+function toggleDescription(element) {
+    // Toggle the 'active' class on the clicked team member
+    element.classList.toggle('active');
 }
