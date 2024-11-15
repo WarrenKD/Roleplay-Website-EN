@@ -1,45 +1,55 @@
 <?php
-if(isset($_POST['submit'])) {
+if (isset($_POST['submit'])) {
+    // Sanitize and validate input fields
+    $username = htmlspecialchars(trim($_POST['username']));
+    $subject = htmlspecialchars(trim($_POST['subject']));
+    $emailAddress = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+    $body = htmlspecialchars(trim($_POST['body']));
 
-    $username = $_POST['username'];
-    $agency = $_POST['subject'];
-    $emailAddress = $_POST['email'];
+    // Validate email
+    if (!$emailAddress) {
+        echo "Invalid email address.";
+        exit();
+    }
 
-    $message = "Name: " . $_POST['username'] . "Email : " . $_POST['email'] . "<br><br> Subject: " . $_POST['subject'] . "<br><br>Message : <br>" . $_POST['body'];
+    // Create the email message content
+    $message = "Name: " . $username . "<br>Email: " . $emailAddress . "<br><br>Subject: " . $subject . "<br><br>Message:<br>" . nl2br($body);
 
+    // Load PHPMailer
     require '../phpmailer/PHPMailerAutoload.php';
 
     $mail = new PHPMailer();
     $mail->isSMTP();
 
-    // Enter SMTP outbox:
-    $mail->Host = ""; // e.g. smtp.1und1.de
-
-    $mail->IsHTML(true);
+    // SMTP settings (replace placeholders with actual values)
+    $mail->Host = "your.smtp.host"; // e.g., smtp.example.com
     $mail->SMTPAuth = true;
+    $mail->Username = "your-email@example.com"; // Your SMTP email
+    $mail->Password = "your-email-password"; // Your SMTP password
+    $mail->SMTPSecure = "tls"; // or "ssl" if required
+    $mail->Port = 587; // Port number (usually 587 for TLS or 465 for SSL)
 
-    // Login and password of the recipient email
-    $mail->Username = ""; // e.g. info@techkings.de
-    $mail->Password = ""; // Password Email / Username
-
-    // Encryption protocol
-    $mail->SMTPSecure = "tls";
-    $mail->Port = 25; // Port for SMTP
-
+    // Email settings
+    $mail->IsHTML(true);
     $mail->Subject = "Request via Website";
     $mail->Body = $message;
-    $mail->setFrom("info@techkings.de", $username); // Deliverer email
-    $mail->addAddress('CommanderDonkey@gmail.com'); // email recipient
+    $mail->setFrom("info@yourdomain.com", $username); // Sender's email
+    $mail->addAddress('warren.x.denham@gsk.com'); // Recipient's email
 
-
-    try{
-        if($mail->send()){
+    try {
+        // Send email and redirect on success
+        if ($mail->send()) {
             header("Location: ../succeed.html");
             exit();
         } else {
-            header("Location: ..&error.html");
+            header("Location: ../error.html");
+            exit();
         }
-    } catch(Exception $e){
-        echo $e->getMessage();
+    } catch (Exception $e) {
+        // Display error message
+        echo "Message could not be sent. Mailer Error: " . $mail->ErrorInfo;
     }
+} else {
+    echo "Invalid form submission.";
 }
+?>
